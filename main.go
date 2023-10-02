@@ -7,12 +7,11 @@ import (
 	"log"
 	"net/http"
 	"strings"
-
 	"github.com/derekbelloni/go-sitemap-builder/pkg/links"
+	"github.com/derekbelloni/go-sitemap-builder/pkg/xmlparser"
 )
 
 func main() {
-	// Need to receive the url from the flag in the command line
 	url := flag.String("url", "https://go.dev/doc/", "supply a url")
 
 	flag.Parse();
@@ -29,9 +28,13 @@ func main() {
 		log.Printf("Error retrieving links from HTML: %v", err)
 	}
 
-	for _, link := range links {
-		fmt.Printf("%+v\n", link)
+	xmlData, err := xmlparser.MarshalXML(links)
+
+	if err != nil {
+		log.Printf("Error retrieving xml sitemap: %v", err)
 	}
+
+	fmt.Println(string(xmlData))
 }
 
 func fetchHTML(url string) (string, error) {
