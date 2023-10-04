@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	url := flag.String("url", "https://go.dev/doc/", "supply a url")
+	url := flag.String("url", "https://gophercises.com", "supply a url")
 
 	flag.Parse();
 
@@ -28,7 +28,13 @@ func main() {
 		log.Printf("Error retrieving links from HTML: %v", err)
 	}
 
-	xmlData, err := xmlparser.MarshalXML(links)
+	domainLinks := xmlparser.MatchUrls(links)
+
+	for _, item := range domainLinks {
+		fmt.Printf("item:%v\n",item)
+	}
+
+	xmlData, err := xmlparser.MarshalXML(domainLinks)
 
 	if err != nil {
 		log.Printf("Error retrieving xml sitemap: %v", err)
@@ -50,3 +56,5 @@ func fetchHTML(url string) (string, error) {
 	}
 	return string(body), nil
  }
+
+ 
